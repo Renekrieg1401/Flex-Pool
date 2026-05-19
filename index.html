@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategisches Personalmodell · Flexpool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:       #0f1923;
+    --paper:     #f5f0e8;
+    --gold:      #c8952a;
+    --gold-lt:   #e8c96a;
+    --teal:      #1e5c6b;
+    --teal-lt:   #2a8a9e;
+    --red:       #b83232;
+    --green:     #2a7a4b;
+    --muted:     #6b7a8d;
+    --rule:      rgba(15,25,35,.12);
+    --card-bg:   rgba(255,255,255,.72);
+    --slide-w:   1100px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* ── DECK ── */
+  #deck {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .55s cubic-bezier(.4,0,.2,1),
+                transform .55s cubic-bezier(.4,0,.2,1);
+    transform: translateY(28px);
+  }
+  .slide.active {
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+  .slide.exit {
+    opacity: 0; transform: translateY(-28px);
+  }
+
+  /* ── INNER WRAPPER ── */
+  .slide-inner {
+    width: min(var(--slide-w), 96vw);
+    max-height: 95vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── BACKGROUNDS ── */
+  .bg-paper  { background: var(--paper); }
+  .bg-ink    { background: var(--ink);   }
+  .bg-teal   { background: var(--teal);  }
+  .bg-gold   { background: var(--gold);  }
+
+  /* ── DECORATIVE CORNER ── */
+  .corner {
+    position: absolute;
+    width: 120px; height: 120px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: .35;
+  }
+  .corner-tl { top: 0; left: 0;  border-width: 3px 0 0 3px; }
+  .corner-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+
+  /* ── SLIDE 1 — TITLE ── */
+  #s1 .slide-inner {
+    background: var(--ink);
+    padding: 72px 80px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 580px;
+  }
+  #s1 .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 48px;
+  }
+  #s1 h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 900; line-height: 1.05;
+    color: var(--paper);
+  }
+  #s1 h1 em { color: var(--gold-lt); font-style: normal; }
+  #s1 .subtitle {
+    margin-top: 24px;
+    font-size: 16px; font-weight: 300; color: rgba(245,240,232,.55);
+    line-height: 1.7;
+  }
+  #s1 .audience {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 48px;
+  }
+  #s1 .tag {
+    padding: 6px 18px;
+    border: 1px solid rgba(200,149,42,.4);
+    border-radius: 2px;
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  #s1 .big-line {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 5px; background: var(--gold);
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider-slide .slide-inner {
+    background: var(--teal);
+    padding: 56px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: 240px;
+  }
+  .divider-slide .phase {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(245,240,232,.5); margin-bottom: 16px;
+  }
+  .divider-slide h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700; color: var(--paper);
+    line-height: 1.1;
+  }
+  .divider-slide h2 span { color: var(--gold-lt); }
+  .divider-slide .bar {
+    width: 64px; height: 4px;
+    background: var(--gold); margin-top: 24px;
+  }
+
+  /* ── CONTENT SLIDES ── */
+  .content-slide .slide-inner {
+    background: var(--paper);
+    padding: 52px 72px 48px;
+  }
+  .slide-header {
+    display: flex; align-items: baseline; gap: 20px;
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 18px; margin-bottom: 36px;
+  }
+  .slide-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted); letter-spacing: .12em;
+    flex-shrink: 0;
+  }
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 700; color: var(--ink); line-height: 1.15;
+  }
+  .slide-title em { color: var(--teal); font-style: normal; }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 24px 22px;
+    backdrop-filter: blur(4px);
+  }
+  .card-accent { border-top: 3px solid var(--gold); }
+  .card-teal   { border-top: 3px solid var(--teal); }
+  .card-green  { border-top: 3px solid var(--green); }
+  .card-red    { border-top: 3px solid var(--red); }
+
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    margin-bottom: 14px;
+  }
+  .icon-gold  { background: rgba(200,149,42,.15); color: var(--gold); }
+  .icon-teal  { background: rgba(30,92,107,.12);  color: var(--teal); }
+  .icon-green { background: rgba(42,122,75,.12);  color: var(--green); }
+  .icon-red   { background: rgba(184,50,50,.10);  color: var(--red); }
+
+  .card h3 {
+    font-size: 13px; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .card .value {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 2.8vw, 38px);
+    font-weight: 900; color: var(--ink);
+    line-height: 1;
+  }
+  .card .value-sm {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 700; color: var(--ink);
+    line-height: 1.2;
+  }
+  .card .unit {
+    font-size: 12px; font-weight: 400; color: var(--muted);
+    margin-left: 4px;
+  }
+  .card .desc {
+    font-size: 13px; font-weight: 300; color: var(--muted);
+    margin-top: 6px; line-height: 1.5;
+  }
+
+  /* ── STAT ROW ── */
+  .stat-row {
+    display: flex; gap: 0;
+    border: 1px solid var(--rule); border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .stat-cell {
+    flex: 1; padding: 18px 20px;
+    border-right: 1px solid var(--rule);
+    background: white;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell .label {
+    font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .stat-cell .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px; font-weight: 500; color: var(--ink);
+  }
+  .stat-cell .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── PROCESS STEPS ── */
+  .steps {
+    display: flex; flex-direction: column; gap: 12px;
+    counter-reset: step;
+  }
+  .step {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px 20px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    counter-increment: step;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--teal); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .step-content h4 {
+    font-size: 13px; font-weight: 600; color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .step-content p {
+    font-size: 12px; font-weight: 300; color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FINANCE TABLE ── */
+  .fin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .fin-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 2px solid var(--rule);
+    background: rgba(255,255,255,.5);
+  }
+  .fin-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+  }
+  .fin-table tr:last-child td { border-bottom: none; }
+  .fin-table .cost { color: var(--red); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .fin-table .revenue { color: var(--green); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .fin-table .total { font-weight: 600; background: rgba(42,122,75,.06); }
+  .fin-table .total td { border-top: 2px solid var(--green); }
+  .fin-table .section-head td {
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); padding-top: 16px; padding-bottom: 6px;
+    background: rgba(245,240,232,.5);
+  }
+
+  /* ── MYTH CARDS ── */
+  .myth-pair { display: flex; flex-direction: column; gap: 8px; }
+  .myth-item {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 12px; align-items: start;
+    padding: 14px 18px;
+    border-radius: 4px;
+  }
+  .myth-item.myth {
+    background: rgba(184,50,50,.07);
+    border-left: 3px solid var(--red);
+  }
+  .myth-item.counter {
+    background: rgba(42,122,75,.07);
+    border-left: 3px solid var(--green);
+  }
+  .myth-icon { font-size: 14px; margin-top: 2px; }
+  .myth-text { font-size: 13px; font-weight: 300; color: var(--ink); line-height: 1.5; }
+  .myth-text strong { font-weight: 600; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 13px; font-weight: 300; color: var(--ink);
+    line-height: 1.55;
+  }
+  .checklist li::before {
+    content: '';
+    width: 18px; height: 18px;
+    border-radius: 2px;
+    background: var(--teal);
+    flex-shrink: 0; margin-top: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    background: var(--teal);
+    border-radius: 6px;
+    padding: 28px 32px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .result-box .big {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900;
+    color: var(--gold-lt);
+    white-space: nowrap;
+  }
+  .result-box .info h4 { color: var(--paper); font-size: 16px; margin-bottom: 4px; }
+  .result-box .info p  { color: rgba(245,240,232,.65); font-size: 12px; line-height: 1.5; font-weight: 300; }
+
+  /* ── PILL ── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 500; letter-spacing: .06em;
+  }
+  .pill-gold  { background: rgba(200,149,42,.15); color: var(--gold); }
+  .pill-teal  { background: rgba(30,92,107,.12);  color: var(--teal); }
+  .pill-green { background: rgba(42,122,75,.12);  color: var(--green); }
+
+  /* ── AGENDA ── */
+  .agenda-list {
+    display: flex; flex-direction: column; gap: 4px;
+    counter-reset: agenda;
+  }
+  .agenda-item {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center; gap: 16px;
+    padding: 14px 20px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-size: 14px;
+    counter-increment: agenda;
+    transition: background .2s;
+  }
+  .agenda-item:hover { background: rgba(30,92,107,.05); }
+  .agenda-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted);
+  }
+  .agenda-tag {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px;
+  }
+
+  /* ── FINAL SLIDE ── */
+  #s-final .slide-inner {
+    background: var(--ink);
+    padding: 64px 80px;
+    min-height: 480px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  #s-final h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 4vw, 50px);
+    font-weight: 900; color: var(--paper);
+    line-height: 1.08;
+  }
+  #s-final h2 em { color: var(--gold-lt); font-style: normal; display: block; }
+  #s-final .summary-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+    margin-top: 36px;
+  }
+  #s-final .sum-card {
+    border: 1px solid rgba(200,149,42,.25);
+    border-radius: 4px; padding: 20px;
+  }
+  #s-final .sum-card h4 {
+    font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+    color: rgba(200,149,42,.7); margin-bottom: 8px;
+  }
+  #s-final .sum-card p {
+    font-size: 13px; color: rgba(245,240,232,.75);
+    font-weight: 300; line-height: 1.5;
+  }
+  #s-final .footer-line {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid rgba(200,149,42,.2);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #s-final .footer-line span {
+    font-size: 11px; color: rgba(245,240,232,.3);
+    letter-spacing: .08em;
+  }
+  #s-final .cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ── NAVIGATION ── */
+  #nav {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(15,25,35,.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(200,149,42,.2);
+    border-radius: 40px;
+    padding: 10px 20px;
+    z-index: 100;
+    user-select: none;
+  }
+  #nav button {
+    background: none; border: none; cursor: pointer;
+    color: rgba(245,240,232,.5);
+    font-size: 18px; line-height: 1;
+    padding: 4px 8px; border-radius: 4px;
+    transition: color .2s, background .2s;
+  }
+  #nav button:hover { color: var(--gold-lt); background: rgba(200,149,42,.1); }
+  #nav button:disabled { opacity: .2; cursor: default; }
+  #nav .progress {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: rgba(200,149,42,.7);
+    min-width: 44px; text-align: center;
+  }
+  #nav .dots { display: flex; gap: 5px; }
+  #nav .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(245,240,232,.2);
+    transition: background .25s, transform .25s;
+    cursor: pointer;
+  }
+  #nav .dot.on {
+    background: var(--gold); transform: scale(1.3);
+  }
+
+  /* ── KEYBOARD HINT ── */
+  #hint {
+    position: fixed; bottom: 28px; right: 28px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .1em;
+    color: rgba(245,240,232,.2);
+    pointer-events: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-2-1 { grid-template-columns: 1fr; }
+    .content-slide .slide-inner { padding: 32px 24px 28px; }
+    #s1 .slide-inner { padding: 40px 32px; }
+    .result-box { flex-direction: column; }
+    #s-final .summary-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ════════════════ SLIDE 1 — TITEL ════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="slide-inner">
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-br"></div>
+      <div class="big-line"></div>
+
+      <div class="eyebrow">Gesamtmitarbeitervertretung der EKHN · Ambulante Pflege</div>
+
+      <div>
+        <h1>Strategisches<br>Personal&shy;modell:<br><em>Flexpool</em></h1>
+        <p class="subtitle">
+          Systematisches Ausfallmanagement — vollständig eigenrefinanziert.<br>
+          Wirtschaftliche Stabilität &amp; Mitarbeiterzufriedenheit ohne Zulagenzahlung.
+        </p>
+        <div class="audience">
+          <span class="tag">MAV</span>
+          <span class="tag">Pflegedienstleitung</span>
+          <span class="tag">Geschäftsführung</span>
+        </div>
+      </div>
+
+      <div style="margin-top:40px; display:flex; gap:32px; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Rechtsgrundlage</div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold);">§ 28 Abs. 1 KDO · § 37.3 SGB XI · § 36 MVG-EKD</div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Basis</div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold);">AVR Diakonie Hessen 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 2 — AGENDA ════════════════ -->
+  <div class="slide content-slide" id="s2">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">00</span>
+        <h2 class="slide-title">Agenda</h2>
+      </div>
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <span class="agenda-num">01</span>
+          <span>Rechtliche Grundlage &amp; Eingruppierungssystematik</span>
+          <span class="agenda-tag pill pill-teal">Recht</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">02</span>
+          <span>Strukturdaten &amp; Arbeitszeitmodell</span>
+          <span class="agenda-tag pill pill-teal">Struktur</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">03</span>
+          <span>Operative Prozesse — Regel- &amp; Krisenbetrieb</span>
+          <span class="agenda-tag pill pill-gold">Prozess</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">04</span>
+          <span>Wirtschaftlichkeit &amp; Eigenrefinanzierung</span>
+          <span class="agenda-tag pill pill-green">Finanzen</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">05</span>
+          <span>Anreizsystem &amp; MAV-Aspekte</span>
+          <span class="agenda-tag pill pill-teal">Personal</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">06</span>
+          <span>Argumentationsleitfaden — Einwände &amp; Antworten</span>
+          <span class="agenda-tag pill pill-gold">Strategie</span>
+        </div>
+        <div class="agenda-item">
+          <span class="agenda-num">07</span>
+          <span>Fazit &amp; nächste Schritte</span>
+          <span class="agenda-tag pill pill-green">Abschluss</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER A ════════════════ -->
+  <div class="slide divider-slide" id="s-d1">
+    <div class="slide-inner">
+      <div class="phase">Phase 1 · Fundament</div>
+      <h2>Rechtliche Basis &amp;<br><span>Stellenbeschreibung</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 3 — RECHT ════════════════ -->
+  <div class="slide content-slide" id="s3">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">01</span>
+        <h2 class="slide-title">Rechtliche Grundlage · <em>§ 28 Abs. 1 KDO</em></h2>
+      </div>
+      <div class="grid-3">
+        <div class="card card-accent">
+          <div class="card-icon icon-gold">⚖️</div>
+          <h3>Tätigkeitsprinzip</h3>
+          <div class="card-value-sm value-sm">Übertragene Aufgabe</div>
+          <p class="desc">Maßgeblich ist die vom Dienstgeber dauerhaft übertragene Tätigkeit — nicht die faktisch ausgeübte.</p>
+        </div>
+        <div class="card card-teal">
+          <div class="card-icon icon-teal">📐</div>
+          <h3>Hinzurechnungsregel</h3>
+          <div class="card-value-sm value-sm">Schwelle: 50 %</div>
+          <p class="desc">Erreicht kein Arbeitsvorgang die 50 %-Schwelle, werden höherwertige Tätigkeiten kumuliert.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon icon-green">📋</div>
+          <h3>Stellenbeschreibung</h3>
+          <div class="card-value-sm value-sm">Steuerungsinstrument</div>
+          <p class="desc">Präzise Definition der Arbeitsvorgänge, Kompetenzen und hierarchischen Einordnung — zentral für rechtssichere Eingruppierung.</p>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding:16px 20px; background:rgba(30,92,107,.06); border-left:3px solid var(--teal); border-radius:2px;">
+        <p style="font-size:13px;color:var(--ink);font-weight:300;line-height:1.6;">
+          <strong style="font-weight:600;">Konsequenz:</strong> Die Flex-Kraft-Stelle wird über eine rechtssichere Stellenbeschreibung klar definiert. Tatsächliche Abweichungen im Alltag sind eingruppierungsrechtlich unerheblich — solange keine dauerhafte formale Übertragung erfolgt.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER B ════════════════ -->
+  <div class="slide divider-slide" id="s-d2">
+    <div class="slide-inner">
+      <div class="phase">Phase 2 · Modellierung</div>
+      <h2>Strukturdaten &amp;<br><span>Arbeitszeitmodell</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 4 — STRUKTURDATEN ════════════════ -->
+  <div class="slide content-slide" id="s4">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">02</span>
+        <h2 class="slide-title">Strukturdaten · <em>Pool-Besetzung</em></h2>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-cell">
+          <div class="label">Abdeckung</div>
+          <div class="num">6-Tage</div>
+          <div class="sub">Mo – Sa lückenlos</div>
+        </div>
+        <div class="stat-cell">
+          <div class="label">Pool-Größe</div>
+          <div class="num">3 MA</div>
+          <div class="sub">Teilzeit ~70 %</div>
+        </div>
+        <div class="stat-cell">
+          <div class="label">Vollzeitäquivalent</div>
+          <div class="num">2,14 VK</div>
+          <div class="sub">mathematisch exakt</div>
+        </div>
+        <div class="stat-cell">
+          <div class="label">Jahreskapazität</div>
+          <div class="num">3.744 h</div>
+          <div class="sub">72 h/Woche</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-teal">
+          <h3>Schichtmodell pro Tag</h3>
+          <div style="display:flex;gap:12px;margin-top:10px;">
+            <div style="flex:1;padding:12px 16px;background:rgba(30,92,107,.08);border-radius:3px;text-align:center;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;">Frühschicht</div>
+              <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--teal);">6,5<span style="font-size:14px;font-weight:400;"> h</span></div>
+            </div>
+            <div style="flex:1;padding:12px 16px;background:rgba(30,92,107,.08);border-radius:3px;text-align:center;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;">Spätschicht</div>
+              <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--teal);">5,5<span style="font-size:14px;font-weight:400;"> h</span></div>
+            </div>
+            <div style="flex:1;padding:12px 16px;background:rgba(30,92,107,.15);border-radius:3px;text-align:center;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;">Gesamt/Tag</div>
+              <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--teal);">12,0<span style="font-size:14px;font-weight:400;"> h</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-accent">
+          <h3>Redundanz-Prinzip</h3>
+          <div style="margin-top:10px;">
+            <div class="value-sm" style="color:var(--gold);">Eigenpufferung</div>
+            <p class="desc" style="margin-top:8px;">3 Personen für 2,14 VK erzeugt einen integrierten Redundanzfaktor. Urlaubs- und Krankheitszeiten werden <strong style="font-weight:600;">direkt innerhalb des Pools</strong> kompensiert — ohne Einspringen aus dem Frei.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER C ════════════════ -->
+  <div class="slide divider-slide" id="s-d3">
+    <div class="slide-inner">
+      <div class="phase">Phase 3 · Betrieb</div>
+      <h2>Operative Prozesse:<br><span>Regel- &amp; Krisenbetrieb</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 5 — PROZESSE ════════════════ -->
+  <div class="slide content-slide" id="s5">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">03</span>
+        <h2 class="slide-title">Operative Prozesse · <em>Zwei Modi</em></h2>
+      </div>
+      <div class="grid-2">
+        <!-- Regelbetrieb -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+            <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--green);">Regelbetrieb</span>
+          </div>
+          <div class="steps">
+            <div class="step" style="border-left:3px solid var(--green);">
+              <div class="step-num" style="background:var(--green);">1</div>
+              <div class="step-content">
+                <h4>Sondertour / Fall-Extraktion</h4>
+                <p>Übernahme zeitintensiver Patienten (Ganzwaschung, Wundmanagement) aus den Stammbezirken → Entlastung &amp; Taktungsoptimierung.</p>
+              </div>
+            </div>
+            <div class="step" style="border-left:3px solid var(--green);">
+              <div class="step-num" style="background:var(--green);">2</div>
+              <div class="step-content">
+                <h4>Beratungskontingent § 37.3 SGB XI</h4>
+                <p><strong style="font-weight:600;">6–7 Beratungsbesuche täglich</strong>, Schwerpunkt Frühschicht. Hochrentabel, da kein Materialeinsatz.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Krisenbetrieb -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;"></span>
+            <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--red);">Krisenbetrieb · Krankmeldung</span>
+          </div>
+          <div class="steps">
+            <div class="step" style="border-left:3px solid var(--red);">
+              <div class="step-num" style="background:var(--red);">1</div>
+              <div class="step-content">
+                <h4>Pflicht-Rückfall</h4>
+                <p>Extrahierte, zeitintensive Fälle werden <em>sofort</em> in ihre Stammbezirke zurückgeführt.</p>
+              </div>
+            </div>
+            <div class="step" style="border-left:3px solid var(--red);">
+              <div class="step-num" style="background:var(--red);">2</div>
+              <div class="step-content">
+                <h4>Vollvertretung</h4>
+                <p>Die Flex-Kraft übernimmt die vakante Regeltour <em>vollständig</em> und nahtlos.</p>
+              </div>
+            </div>
+            <div class="step" style="border-left:3px solid var(--red);">
+              <div class="step-num" style="background:var(--red);">3</div>
+              <div class="step-content">
+                <h4>Priorisierung</h4>
+                <p>Beratungsbesuche werden <em>vollständig ausgesetzt</em> — Grundpflege hat absolute Priorität.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER D ════════════════ -->
+  <div class="slide divider-slide" id="s-d4">
+    <div class="slide-inner">
+      <div class="phase">Phase 4 · Kalkulation</div>
+      <h2>Wirtschaftlichkeit &amp;<br><span>Eigenrefinanzierung</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 6 — FINANZEN ════════════════ -->
+  <div class="slide content-slide" id="s6">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">04</span>
+        <h2 class="slide-title">Wirtschaftlichkeit · <em>Jahresrechnung</em></h2>
+      </div>
+      <div class="grid-2-1">
+        <div>
+          <table class="fin-table">
+            <thead>
+              <tr>
+                <th>Posten</th>
+                <th>Wert/Jahr</th>
+                <th>Erläuterung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-head"><td colspan="3">Kosten</td></tr>
+              <tr>
+                <td>Personalkosten (2,14 VK)</td>
+                <td class="cost">132.680 €</td>
+                <td style="font-size:12px;color:var(--muted);">Brutto inkl. AG-Anteil, ohne Zulagen</td>
+              </tr>
+              <tr>
+                <td>Sachkosten / KFZ</td>
+                <td class="cost">15.000 €</td>
+                <td style="font-size:12px;color:var(--muted);">Pool-Fahrzeuge</td>
+              </tr>
+              <tr>
+                <td><strong>Gesamtkosten</strong></td>
+                <td class="cost" style="font-weight:700;">147.680 €</td>
+                <td style="font-size:12px;color:var(--muted);">Mindestumsatz zur Kostendeckung</td>
+              </tr>
+              <tr class="section-head"><td colspan="3">Erlöse</td></tr>
+              <tr>
+                <td>Pflegeleistungen (SGB XI/V)</td>
+                <td class="revenue">95.000 €</td>
+                <td style="font-size:12px;color:var(--muted);">Übernahme pflegeintensiver Fälle</td>
+              </tr>
+              <tr>
+                <td>Beratung § 37.3 SGB XI</td>
+                <td class="revenue">55.000 €</td>
+                <td style="font-size:12px;color:var(--muted);">~730 Besuche p.a. · ~2,4/Tag</td>
+              </tr>
+              <tr class="total">
+                <td><strong>Gesamterlöse</strong></td>
+                <td class="revenue" style="font-weight:700;">150.000 €</td>
+                <td style="font-size:12px;color:var(--muted);">Summe Einnahmen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="result-box">
+            <div class="big">+ 2.320 €</div>
+            <div class="info">
+              <h4>Jahresüberschuss</h4>
+              <p>Das Modell arbeitet vollständig kostenneutral mit leichtem Überschuss — ohne Rückgriff auf zusätzliche Budgets.</p>
+            </div>
+          </div>
+          <div class="card card-accent">
+            <h3>Tagesumsatz gesichert</h3>
+            <div class="value">~ 400 €</div>
+            <p class="desc">Pro verhinderter Tourenabsage bleibt der volle Tagesumsatz erhalten. Bereits 3–4 verhinderte Ausfälle/Monat decken die KFZ-Kosten.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER E ════════════════ -->
+  <div class="slide divider-slide" id="s-d5">
+    <div class="slide-inner">
+      <div class="phase">Phase 5 · Personal &amp; Recht</div>
+      <h2>Anreizsystem &amp;<br><span>MAV-Aspekte</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 7 — ANREIZE & MAV ════════════════ -->
+  <div class="slide content-slide" id="s7">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">05</span>
+        <h2 class="slide-title">Anreizsystem &amp; <em>MAV-Rahmen</em></h2>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div style="margin-bottom:14px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">Immaterielles Anreizsystem (kein Zulage-Modell)</div>
+          <ul class="checklist">
+            <li><strong style="font-weight:600;">Schichtlänge max. 6,5 Stunden</strong> — garantierte Work-Life-Balance, kein unbezahlter Puffer.</li>
+            <li><strong style="font-weight:600;">Absolutes Einspring-Verbot</strong> — kein Abruf aus dem geplanten Frei unter keinen Umständen.</li>
+            <li><strong style="font-weight:600;">Dienstwagen inkl. 1%-Regelung</strong> — optionaler Sachbezug als attraktiver Zusatzbenefit.</li>
+            <li><strong style="font-weight:600;">Planbarkeit als Kernversprechen</strong> — Dienstplanverlässlichkeit ist laut Studien der wichtigste Zufriedenheitsfaktor.</li>
+          </ul>
+        </div>
+        <div>
+          <div style="margin-bottom:14px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">MAV-Beteiligung nach MVG-EKD</div>
+          <div class="steps">
+            <div class="step" style="border-left:3px solid var(--teal);">
+              <div class="step-num">§</div>
+              <div class="step-content">
+                <h4>Dienstvereinbarung § 36 MVG-EKD</h4>
+                <p>Verbindliche Regelung des Rückfall-Prinzips — rechtlich zwingend zur Vermeidung unzulässiger Stammpersonal-Überlastung.</p>
+              </div>
+            </div>
+            <div class="step" style="border-left:3px solid var(--teal);">
+              <div class="step-num">🛡</div>
+              <div class="step-content">
+                <h4>Systemischer Gesundheitsschutz</h4>
+                <p>Dauerhafte Entlastung der Regeltouren senkt Burnout-Risiko im gesamten Team — Kernforderung des MVG-EKD.</p>
+              </div>
+            </div>
+            <div class="step" style="border-left:3px solid var(--teal);">
+              <div class="step-num">📊</div>
+              <div class="step-content">
+                <h4>Fluktuation &amp; Vakanzkosten</h4>
+                <p>Ø <strong style="font-weight:600;">15.000 €</strong> Kosten pro Neubesetzung einer Fachkraftstelle — präventive Strukturinvestition rechnet sich sofort.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIVIDER F ════════════════ -->
+  <div class="slide divider-slide" id="s-d6">
+    <div class="slide-inner">
+      <div class="phase">Phase 6 · Verhandlung</div>
+      <h2>Argumentations&shy;leitfaden:<br><span>Einwände &amp; Antworten</span></h2>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 8 — ARGUMENTE 1 ════════════════ -->
+  <div class="slide content-slide" id="s8">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">06A</span>
+        <h2 class="slide-title">Einwände · <em>Personal &amp; Team</em></h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <div class="myth-pair">
+          <div class="myth-item myth">
+            <span class="myth-icon">❌</span>
+            <div class="myth-text"><strong>„Wir sind ein Team — Geben und Nehmen — wir brauchen kein Ausfallmanagement."</strong></div>
+          </div>
+          <div class="myth-item counter">
+            <span class="myth-icon">✅</span>
+            <div class="myth-text">Ein Team funktioniert auf gesunden Strukturen. „Geben und Nehmen" darf nicht bedeuten, dass Mitarbeiter das unternehmerische Risiko mit ihrer Gesundheit bezahlen. Das System schützt das Team vor Selbstausbeutung und sichert langfristige Einsatzfähigkeit.</div>
+          </div>
+        </div>
+
+        <div class="myth-pair">
+          <div class="myth-item myth">
+            <span class="myth-icon">❌</span>
+            <div class="myth-text"><strong>„Nach dem letzten Auftrag kann man nach Hause — das ist doch Freizeit."</strong></div>
+          </div>
+          <div class="myth-item counter">
+            <span class="myth-icon">✅</span>
+            <div class="myth-text">Punktuelle, unplanbare Freizeit hat keinen Erholungswert und rechtfertigt nicht das Einspringen an freien Tagen. Das ArbZG verlangt verlässliche Ruhezeiten. <strong>Planbarkeit ist der wichtigste Zufriedenheitsfaktor</strong> — nicht das spontane „früher nach Hause".</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE 9 — ARGUMENTE 2 ════════════════ -->
+  <div class="slide content-slide" id="s9">
+    <div class="slide-inner">
+      <div class="slide-header">
+        <span class="slide-num">06B</span>
+        <h2 class="slide-title">Einwände · <em>Ökonomie &amp; Compliance</em></h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <div class="myth-pair">
+          <div class="myth-item myth">
+            <span class="myth-icon">❌</span>
+            <div class="myth-text"><strong>„Personalbemessungsgrenze lässt kein weiteres Personal zu."</strong></div>
+          </div>
+          <div class="myth-item counter">
+            <span class="myth-icon">✅</span>
+            <div class="myth-text">Die Grenze sichert die gesetzliche Mindestbesetzung, <em>verbietet nicht</em> die Vorhaltung für Ausfallzeiten. Die Kassen refinanzieren Versorgungssicherheit. § 37.3 SGB XI-Erlöse liegen vollständig außerhalb der klassischen Touren-Bemessung.</div>
+          </div>
+        </div>
+
+        <div class="myth-pair">
+          <div class="myth-item myth">
+            <span class="myth-icon">❌</span>
+            <div class="myth-text"><strong>„Wir können kein weiteres Dienstfahrzeug finanzieren."</strong></div>
+          </div>
+          <div class="myth-item counter">
+            <span class="myth-icon">✅</span>
+            <div class="myth-text">Leasing: ~400–600 €/Monat. Bereits <strong>3–4 verhinderte Tourenausfälle</strong> oder ~10 Beratungseinsätze decken die Monatsrate. Das Fahrzeug ist kein Kostenfaktor — es ist ein Werkzeug zur Erlöserhaltung.</div>
+          </div>
+        </div>
+
+        <div class="myth-pair">
+          <div class="myth-item myth">
+            <span class="myth-icon">❌</span>
+            <div class="myth-text"><strong>„So viele Ausfälle haben wir gar nicht — das lohnt sich nicht."</strong></div>
+          </div>
+          <div class="myth-item counter">
+            <span class="myth-icon">✅</span>
+            <div class="myth-text">Der Flexpool ist ab Tag 1 produktiv — durch Fall-Extraktion &amp; Beratungen. Die „Lohnersparnis" durch Nicht-Handeln wird durch Fluktuation teuer erkauft: <strong>Ø 15.000 € Vakanzkosten</strong> pro Fachkraftstelle.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SLIDE FINAL ════════════════ -->
+  <div class="slide" id="s-final">
+    <div class="slide-inner">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">07 · Fazit</div>
+        <h2>Das Modell trägt sich selbst.<br><em>Ab dem ersten Tag.</em></h2>
+      </div>
+
+      <div class="summary-grid">
+        <div class="sum-card">
+          <h4>Rechtlich</h4>
+          <p>§ 28 KDO · § 36 MVG-EKD · § 13 BUrlG — vollständige Compliance, keine Graubereiche.</p>
+        </div>
+        <div class="sum-card">
+          <h4>Wirtschaftlich</h4>
+          <p>147.680 € Kosten · 150.000 € Erlöse · <strong style="color:var(--gold-lt);">+2.320 € Überschuss</strong> — kostenneutral.</p>
+        </div>
+        <div class="sum-card">
+          <h4>Personalpolitisch</h4>
+          <p>Kein Einspringen · max. 6,5 h Schicht · Dienstwagen — Gewinnung &amp; Bindung ohne Zulage.</p>
+        </div>
+        <div class="sum-card">
+          <h4>Operativ</h4>
+          <p>3-stufiger Krisenprozess · Fall-Extraktion · ~730 Beratungsbesuche p.a. — lückenlos.</p>
+        </div>
+        <div class="sum-card">
+          <h4>MAV-Schutz</h4>
+          <p>Dienstvereinbarung sichert Stammpersonal ab. Systemischer Gesundheitsschutz für das gesamte Team.</p>
+        </div>
+        <div class="sum-card">
+          <h4>Nächste Schritte</h4>
+          <p>Dienstvereinbarung erarbeiten · Stellenbeschreibung finalisieren · Pilotbetrieb starten.</p>
+        </div>
+      </div>
+
+      <div class="footer-line">
+        <span>Strategisches Personalmodell · Flexpool · EKHN Ambulante Pflege</span>
+        <span class="cta">AVR Diakonie Hessen 2026 · § 37.3 SGB XI · § 36 MVG-EKD</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAVIGATION ── -->
+<nav id="nav">
+  <button id="btn-prev" title="Zurück (←)">&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <span class="progress" id="prog">1 / 14</span>
+  <button id="btn-next" title="Weiter (→)">&#8594;</button>
+</nav>
+<div id="hint">← → Pfeiltasten · Leertaste</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsEl = document.getElementById('dots');
+  const prog   = document.getElementById('prog');
+  const btnP   = document.getElementById('btn-prev');
+  const btnN   = document.getElementById('btn-next');
+  let cur = 0;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= slides.length) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    setTimeout(() => slides[cur - (cur - idx > 0 ? (cur - idx) : 0)]?.classList.remove('exit'), 600);
+
+    // Remove exit from old after transition
+    const prev = cur;
+    setTimeout(() => slides[prev].classList.remove('exit'), 600);
+
+    cur = idx;
+    slides[cur].classList.add('active');
+
+    // Update dots
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
+    prog.textContent = `${cur + 1} / ${slides.length}`;
+    btnP.disabled = cur === 0;
+    btnN.disabled = cur === slides.length - 1;
+  }
+
+  btnN.addEventListener('click', () => goTo(cur + 1));
+  btnP.addEventListener('click', () => goTo(cur - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur + 1); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); goTo(cur - 1); }
+    if (e.key === 'ArrowDown')                    { e.preventDefault(); goTo(cur + 1); }
+    if (e.key === 'ArrowUp')                      { e.preventDefault(); goTo(cur - 1); }
+  });
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) dx < 0 ? goTo(cur + 1) : goTo(cur - 1);
+  }, { passive: true });
+
+  // Init state
+  btnP.disabled = true;
+  prog.textContent = `1 / ${slides.length}`;
+</script>
+</body>
+</html>
