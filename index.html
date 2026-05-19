@@ -30,39 +30,68 @@
     background: var(--ink);
     color: var(--ink);
     overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar { display: none; }
+  *::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
 
   /* ── DECK ── */
   #deck {
-    position: relative;
-    width: 100vw; height: 100vh;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--ink);
   }
 
   .slide {
     position: absolute;
     inset: 0;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .55s cubic-bezier(.4,0,.2,1),
-                transform .55s cubic-bezier(.4,0,.2,1);
-    transform: translateY(28px);
+    visibility: hidden;
+    z-index: 0;
+    background: var(--ink);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
+    transform: translateY(18px);
   }
   .slide.active {
-    opacity: 1; pointer-events: auto; transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    z-index: 1;
+    transform: translateY(0);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear 0s;
   }
   .slide.exit {
-    opacity: 0; transform: translateY(-28px);
+    opacity: 0;
+    visibility: visible;
+    z-index: 0;
+    transform: translateY(-18px);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
   }
 
   /* ── INNER WRAPPER ── */
   .slide-inner {
     width: min(var(--slide-w), 96vw);
-    max-height: 95vh;
-    overflow: hidden;
+    max-height: calc(100vh - 48px);
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
+  .slide-inner::-webkit-scrollbar { display: none; }
 
   /* ── BACKGROUNDS ── */
   .bg-paper  { background: var(--paper); }
@@ -446,52 +475,42 @@
     color: var(--gold);
   }
 
-  /* ── NAVIGATION ── */
-  #nav {
-    position: fixed; bottom: 28px; left: 50%;
-    transform: translateX(-50%);
-    display: flex; align-items: center; gap: 12px;
-    background: rgba(15,25,35,.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(200,149,42,.2);
-    border-radius: 40px;
-    padding: 10px 20px;
-    z-index: 100;
+  /* ── SEITENPFEILE ── */
+  .side-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 16px 10px;
+    color: rgba(200,149,42,.55);
+    font-size: 28px;
+    line-height: 1;
+    transition: color .2s, transform .2s;
+    -webkit-tap-highlight-color: transparent;
     user-select: none;
   }
-  #nav button {
-    background: none; border: none; cursor: pointer;
-    color: rgba(245,240,232,.5);
-    font-size: 18px; line-height: 1;
-    padding: 4px 8px; border-radius: 4px;
-    transition: color .2s, background .2s;
-  }
-  #nav button:hover { color: var(--gold-lt); background: rgba(200,149,42,.1); }
-  #nav button:disabled { opacity: .2; cursor: default; }
-  #nav .progress {
+  .side-arrow:hover  { color: var(--gold-lt); }
+  .side-arrow:active { transform: translateY(-50%) scale(.88); }
+  .side-arrow:disabled { opacity: .15; cursor: default; }
+  #btn-prev { left: 6px; }
+  #btn-next { right: 6px; }
+
+  /* Seitenfortschritt (kleine Zahl unten Mitte) */
+  #prog {
+    position: fixed;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%);
     font-family: 'DM Mono', monospace;
-    font-size: 11px; color: rgba(200,149,42,.7);
-    min-width: 44px; text-align: center;
-  }
-  #nav .dots { display: flex; gap: 5px; }
-  #nav .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(245,240,232,.2);
-    transition: background .25s, transform .25s;
-    cursor: pointer;
-  }
-  #nav .dot.on {
-    background: var(--gold); transform: scale(1.3);
+    font-size: 10px; letter-spacing: .12em;
+    color: rgba(200,149,42,.35);
+    pointer-events: none;
+    z-index: 200;
   }
 
-  /* ── KEYBOARD HINT ── */
-  #hint {
-    position: fixed; bottom: 28px; right: 28px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: .1em;
-    color: rgba(245,240,232,.2);
-    pointer-events: none;
-  }
+
 
   /* ── RESPONSIVE ── */
   @media (max-width: 720px) {
@@ -503,6 +522,9 @@
     .result-box { flex-direction: column; }
     #s-final .summary-grid { grid-template-columns: 1fr; }
   }
+
+
+
 </style>
 </head>
 <body>
@@ -579,11 +601,6 @@
         </div>
         <div class="agenda-item">
           <span class="agenda-num">06</span>
-          <span>Argumentationsleitfaden — Einwände &amp; Antworten</span>
-          <span class="agenda-tag pill pill-gold">Strategie</span>
-        </div>
-        <div class="agenda-item">
-          <span class="agenda-num">07</span>
           <span>Fazit &amp; nächste Schritte</span>
           <span class="agenda-tag pill pill-green">Abschluss</span>
         </div>
@@ -915,57 +932,17 @@
   </div>
 
   <!-- ════════════════ DIVIDER F ════════════════ -->
-  <div class="slide divider-slide" id="s-d6">
-    <div class="slide-inner">
-      <div class="phase">Phase 6 · Verhandlung</div>
-      <h2>Argumentations&shy;leitfaden:<br><span>Einwände &amp; Antworten</span></h2>
-      <div class="bar"></div>
-    </div>
-  </div>
-
-  <!-- ════════════════ SLIDE 8 — ARGUMENTE 1 ════════════════ -->
-  <div class="slide content-slide" id="s8">
-    <div class="slide-inner">
-      <div class="slide-header">
-        <span class="slide-num">06A</span>
-        <h2 class="slide-title">Einwände · <em>Personal &amp; Team</em></h2>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:20px;">
 
         <div class="myth-pair">
           <div class="myth-item myth">
             <span class="myth-icon">❌</span>
-            <div class="myth-text"><strong>„Wir sind ein Team — Geben und Nehmen — wir brauchen kein Ausfallmanagement."</strong></div>
+            <div class="myth-text"><strong>„Früher nach Hause ist doch auch Freizeit."</strong></div>
           </div>
           <div class="myth-item counter">
             <span class="myth-icon">✅</span>
-            <div class="myth-text">Ein Team funktioniert auf gesunden Strukturen. „Geben und Nehmen" darf nicht bedeuten, dass Mitarbeiter das unternehmerische Risiko mit ihrer Gesundheit bezahlen. Das System schützt das Team vor Selbstausbeutung und sichert langfristige Einsatzfähigkeit.</div>
+            <div class="myth-text">Unplanbare Freizeit hat keinen Erholungswert. Das ArbZG fordert verlässliche Ruhezeiten. <strong>Planbarkeit</strong> ist laut Studien der entscheidende Zufriedenheitsfaktor.</div>
           </div>
         </div>
-
-        <div class="myth-pair">
-          <div class="myth-item myth">
-            <span class="myth-icon">❌</span>
-            <div class="myth-text"><strong>„Nach dem letzten Auftrag kann man nach Hause — das ist doch Freizeit."</strong></div>
-          </div>
-          <div class="myth-item counter">
-            <span class="myth-icon">✅</span>
-            <div class="myth-text">Punktuelle, unplanbare Freizeit hat keinen Erholungswert und rechtfertigt nicht das Einspringen an freien Tagen. Das ArbZG verlangt verlässliche Ruhezeiten. <strong>Planbarkeit ist der wichtigste Zufriedenheitsfaktor</strong> — nicht das spontane „früher nach Hause".</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════ SLIDE 9 — ARGUMENTE 2 ════════════════ -->
-  <div class="slide content-slide" id="s9">
-    <div class="slide-inner">
-      <div class="slide-header">
-        <span class="slide-num">06B</span>
-        <h2 class="slide-title">Einwände · <em>Ökonomie &amp; Compliance</em></h2>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:16px;">
 
         <div class="myth-pair">
           <div class="myth-item myth">
@@ -974,29 +951,29 @@
           </div>
           <div class="myth-item counter">
             <span class="myth-icon">✅</span>
-            <div class="myth-text">Die Grenze sichert die gesetzliche Mindestbesetzung, <em>verbietet nicht</em> die Vorhaltung für Ausfallzeiten. Die Kassen refinanzieren Versorgungssicherheit. § 37.3 SGB XI-Erlöse liegen vollständig außerhalb der klassischen Touren-Bemessung.</div>
+            <div class="myth-text">Die Grenze sichert Mindestbesetzung — verbietet keine Vorhaltekapazität. § 37.3 SGB XI-Erlöse liegen vollständig außerhalb der Touren-Bemessung.</div>
           </div>
         </div>
 
         <div class="myth-pair">
           <div class="myth-item myth">
             <span class="myth-icon">❌</span>
-            <div class="myth-text"><strong>„Wir können kein weiteres Dienstfahrzeug finanzieren."</strong></div>
+            <div class="myth-text"><strong>„Kein Budget für ein weiteres Fahrzeug."</strong></div>
           </div>
           <div class="myth-item counter">
             <span class="myth-icon">✅</span>
-            <div class="myth-text">Leasing: ~400–600 €/Monat. Bereits <strong>3–4 verhinderte Tourenausfälle</strong> oder ~10 Beratungseinsätze decken die Monatsrate. Das Fahrzeug ist kein Kostenfaktor — es ist ein Werkzeug zur Erlöserhaltung.</div>
+            <div class="myth-text">Leasing ~400–600 €/Monat. Bereits 3–4 verhinderte Tourenausfälle decken die Rate. Das Fahrzeug ist ein Erlöswerkzeug — kein Kostenfaktor.</div>
           </div>
         </div>
 
         <div class="myth-pair">
           <div class="myth-item myth">
             <span class="myth-icon">❌</span>
-            <div class="myth-text"><strong>„So viele Ausfälle haben wir gar nicht — das lohnt sich nicht."</strong></div>
+            <div class="myth-text"><strong>„So viele Ausfälle haben wir gar nicht."</strong></div>
           </div>
           <div class="myth-item counter">
             <span class="myth-icon">✅</span>
-            <div class="myth-text">Der Flexpool ist ab Tag 1 produktiv — durch Fall-Extraktion &amp; Beratungen. Die „Lohnersparnis" durch Nicht-Handeln wird durch Fluktuation teuer erkauft: <strong>Ø 15.000 € Vakanzkosten</strong> pro Fachkraftstelle.</div>
+            <div class="myth-text">Der Pool ist ab Tag 1 produktiv — durch Fall-Extraktion &amp; Beratungen. Jede Neubesetzung kostet Ø <strong>15.000 €</strong>. Prävention ist billiger als Reaktion.</div>
           </div>
         </div>
 
@@ -1049,45 +1026,25 @@
 </div><!-- /deck -->
 
 <!-- ── NAVIGATION ── -->
-<nav id="nav">
-  <button id="btn-prev" title="Zurück (←)">&#8592;</button>
-  <div class="dots" id="dots"></div>
-  <span class="progress" id="prog">1 / 14</span>
-  <button id="btn-next" title="Weiter (→)">&#8594;</button>
-</nav>
-<div id="hint">← → Pfeiltasten · Leertaste</div>
+<button id="btn-prev" class="side-arrow" title="Zurück">&#8249;</button>
+<button id="btn-next" class="side-arrow" title="Weiter">&#8250;</button>
+<span id="prog">1 / 16</span>
 
 <script>
   const slides = Array.from(document.querySelectorAll('.slide'));
-  const dotsEl = document.getElementById('dots');
-  const prog   = document.getElementById('prog');
-  const btnP   = document.getElementById('btn-prev');
-  const btnN   = document.getElementById('btn-next');
+  const prog = document.getElementById('prog');
+  const btnP = document.getElementById('btn-prev');
+  const btnN = document.getElementById('btn-next');
   let cur = 0;
-
-  // Build dots
-  slides.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' on' : '');
-    d.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(d);
-  });
 
   function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
     slides[cur].classList.remove('active');
     slides[cur].classList.add('exit');
-    setTimeout(() => slides[cur - (cur - idx > 0 ? (cur - idx) : 0)]?.classList.remove('exit'), 600);
-
-    // Remove exit from old after transition
     const prev = cur;
     setTimeout(() => slides[prev].classList.remove('exit'), 600);
-
     cur = idx;
     slides[cur].classList.add('active');
-
-    // Update dots
-    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
     prog.textContent = `${cur + 1} / ${slides.length}`;
     btnP.disabled = cur === 0;
     btnN.disabled = cur === slides.length - 1;
@@ -1103,15 +1060,21 @@
     if (e.key === 'ArrowUp')                      { e.preventDefault(); goTo(cur - 1); }
   });
 
-  // Touch swipe
-  let tx = 0;
-  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-  document.addEventListener('touchend',   e => {
+  // Touch swipe – nur horizontal, nicht wenn vertikal gescrollt wird
+  let tx = 0, ty = 0;
+  document.addEventListener('touchstart', e => {
+    tx = e.touches[0].clientX;
+    ty = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) dx < 0 ? goTo(cur + 1) : goTo(cur - 1);
+    const dy = e.changedTouches[0].clientY - ty;
+    // Nur wechseln wenn horizontale Bewegung dominiert und > 60px
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      dx < 0 ? goTo(cur + 1) : goTo(cur - 1);
+    }
   }, { passive: true });
 
-  // Init state
   btnP.disabled = true;
   prog.textContent = `1 / ${slides.length}`;
 </script>
