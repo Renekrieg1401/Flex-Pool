@@ -37,7 +37,41 @@
   E7/Stufe 3 durchgeführt — keine `legal-compliance`-Agentenfreigabe
   angefordert, reine Logik-/Code-Analyse. Keine inhaltlichen Korrekturen
   vorgenommen (René hat nur Analyse + Feedback angefordert, keinen Fix).
-- **[KORREKTUR-POTENZIAL]:** Falls René das Dokument tatsächlich dem
-  Vorstand vorlegen will: die beiden Tippfehler sowie die Extraktions-
-  erlös-Neutralisierung und die unbelegte Beratungszahl-Annahme sollten vor
-  einer echten Vorstandsvorlage behoben/belegt werden.
+## Nachtrag 2026-11-18 (2) — Agentenkette "wasserdicht machen" (René-Freigabe)
+- **[ERLEDIGT] Strikt sequenzielle Kette:** `legal-compliance` →
+  `business-consultant` → `business-finance` → Claude (Implementierung) →
+  `business-consultant` (Gegenprüfung, geschlossener Regelkreis).
+- **[ERLEDIGT] legal-compliance-Fund:** Der angesetzte 70,00-€-
+  Beratungssatz (§37.3 SGB XI) war nicht nur unbelegt, sondern lag 5 €
+  UNTER dem real verhandelten Hessen-Satz (75,00 €, vdek-
+  Leistungsbeschreibung Hessen, inkl. Hausbesuchspauschale). Die
+  786/854/815-Beratungen waren im Dokument als frei wählbare Stellschraube
+  dargestellt, sind aber gesetzlich auf 2-4 Beratungen/Klient/Jahr gedeckelt
+  (§ 37 Abs. 3 SGB XI) — entspricht ca. 200-400 real abrufenden Klienten in
+  den 5 Bezirken. KDO/EKHN/E7-Stufe-3 bestätigt korrekt und plausibel.
+- **[ERLEDIGT] business-consultant-Fund (1. Lauf):** 4 KRITISCH (K1-K4) + 2
+  WICHTIG (W1-W2) — Dokument war "nicht vorstandsreif".
+- **[ERLEDIGT] business-finance:** lieferte konkrete Textbausteine/Zahlen
+  für alle 6 Punkte (Puffer-Empfehlung +5.000€/≈3,3%, Disclaimer-Text,
+  Szenario-D-Berechnung, Risiko-Ergänzung, K1-Platzhalter-Formulierung).
+- **[ERLEDIGT] Implementierung (Claude):** Satz 70€→75€ korrigiert, Ziel-
+  Ergebnis +20€→+5.000€ angehoben, neue Szenario-D-Spalte (Worst-Case,
+  -15% Abrufquote) ergänzt, K1-"0,00€/neutral"-Formulierung durch ehrliche
+  "nicht quantifiziert"-Formulierung ersetzt, K3-Disclaimer-Absatz ergänzt,
+  W2-Risiko (Single-Point-of-Failure der Reserve selbst) in Risikoliste
+  ergänzt, 2 Tippfehler behoben. Alle Tabellenwerte neu durchgerechnet und
+  intern konsistent (Playwright: 0 Fehler, kein Overflow). Deployed (MD5-
+  identisch bestätigt), committed+gepusht (`41e7dec`).
+- **[ERLEDIGT] Geschlossener Regelkreis (2. business-consultant-Lauf,
+  eigenständig gegen den echten Code, nicht gegen meinen Bericht):** K1 ✅,
+  K2 ✅, K3 ✅, W1 ✅ sauber behoben (inkl. eigener Nachrechnung). K4 (reale
+  Klientenzahl) und W2 (konkrete Gegenmaßnahme für Reserve-Ausfall) nur
+  ⚠️ teilweise — beide jetzt aber ehrlich als offen deklariert statt
+  verschleiert. Verdikt: "kein KRITISCH mehr im Sinne von Täuschung/
+  Rechenfehler, aber nicht entscheidungsreif ohne Vorbehalt."
+- **[OFFEN, bewusst nicht durch einen Agenten lösbar]:** K4 (echte
+  Bestandszahl der §37.3-anspruchsberechtigten Klienten in den 5 Bezirken)
+  und W2 (konkrete Backup-Maßnahme bei Ausfall einer Flex-Pool-Kraft
+  selbst) brauchen reale Betriebsdaten/Personalplanung bei René/Diakonie
+  Gladenbach — liegt außerhalb dessen, was aus dem Repo heraus verifizierbar
+  ist.
