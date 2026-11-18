@@ -500,7 +500,7 @@
                     <div style="display: inline-block; background: #e11d48; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px;">STÖRFALL (KRANKHEIT)</div>
                     <h3 style="margin-bottom: 15px; color: #9f1239;">Interne Kompensation</h3>
                     <ul class="styled-list" style="color: #4c0519;">
-                        <li style="margin-bottom: 6px;">Der Flex-Pool übernimmt ad hoc eine komplette Tour des ausfallenden Stammmitarbeiterers.</li>
+                        <li style="margin-bottom: 6px;">Der Flex-Pool übernimmt ad hoc eine komplette Tour des ausfallenden Stammmitarbeiters.</li>
                         <li style="margin-bottom: 6px;">Rückführung extrahierter Klienten in ihre ursprüngliche Tour.</li>
                         <li style="margin-bottom: 6px;">Geplante Beratungen werden prioritär und flexibel verschoben.</li>
                     </ul>
@@ -608,7 +608,7 @@
                     <ul class="styled-list" style="font-size: 0.9rem;">
                         <li>Strukturelle Analyse aller <strong>5 Pflegebezirke</strong></li>
                         <li>Keine Benachteiligung einzelner Regionen</li>
-                        <li>Zentral gesteuer der Auswahlprozess durch die Pflegedienstleitung</li>
+                        <li>Zentral gesteuert der Auswahlprozess durch die Pflegedienstleitung</li>
                     </ul>
                 </div>
             </div>
@@ -664,7 +664,7 @@
                     </p>
                     <ul class="styled-list">
                         <li><strong>Reguläre Pflegeerlöse:</strong> Grund- und Behandlungspflegen der fest zugeordneten Tourenanteile.</li>
-                        <li><strong>Statische Beratungserlöse (§ 37.3 SGB XI):</strong> Systematische Erbringung durch die Reservefunktion mit einem Durchschnittssatz von 70,00 € pro Beratung.</li>
+                        <li><strong>Statische Beratungserlöse (§ 37.3 SGB XI):</strong> Systematische Erbringung durch die Reservefunktion mit dem real verhandelten Hessen-Satz von 75,00 € pro Beratung (vdek-Leistungsbeschreibung Hessen, inkl. Hausbesuchspauschale).</li>
                     </ul>
                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #94a3b8; font-weight: 700; color: #0f172a;">
                         Zielvorgabe: Punktgenaue Budgetierung nahe dem Break-Even-Punkt zur Vermeidung von Überprofiten.
@@ -755,6 +755,7 @@
                         <li>Fehlerhafte Klientenextraktion führt zu neuer Toureninstabilität.</li>
                         <li>Unklare Zuständigkeiten zwischen Stammteam und Flex-Pool.</li>
                         <li>Überlastung des Flex-Pools bei extremen Krankheitswellen.</li>
+                        <li>Fällt eine der 3 Flex-Pool-Kräfte selbst aus (Krankheit, Kündigung), entfällt die Rückfalloption für alle 5 Bezirke gleichzeitig — die Reserve hat keine eigene Reserve, Single-Point-of-Failure im Risikomanagement-System selbst.</li>
                     </ul>
 
                     <strong style="font-size: 0.95rem; color: #9f1239;">Strukturelle Risiken:</strong>
@@ -930,18 +931,19 @@
                     <strong>Definierte Ausgangswerte der Kalkulation:</strong><br>
                     • Personalressource: 3 Mitarbeitende (Gesamtkapazität = 2,25 VZÄ)<br>
                     • KDO-Einstufung (Basis): Entgeltgruppe E 7, Stufe 3 (beispielhafter Mittelwert)<br>
-                    • Durchschnittliche Beratungspauschale (§ 37.3 SGB XI): Neu angesetzt mit <strong>70,00 € pro Beratung</strong><br>
-                    • Erforderliche Beratungen in der Ausgangslage Basis (A): <strong>786 Einsätze pro Jahr</strong> (zur Kompensation der angepassten Infrastrukturkosten)<br>
-                    • Finanzieller Einzelerlös aus Extraktionen: Vorerst mit 0,00 € / neutral deklariert
+                    • Beratungspauschale (§ 37.3 SGB XI): real verhandelter Hessen-Satz <strong>75,00 € pro Beratung</strong> (vdek-Leistungsbeschreibung Hessen, inkl. Hausbesuchspauschale) — gesetzlich max. 2–4 Beratungen pro Klient/Jahr, abhängig vom Pflegegrad (§ 37 Abs. 3 SGB XI), keine frei skalierbare Größe<br>
+                    • Erforderliche Beratungen in der Ausgangslage Basis (A): <strong>800 Einsätze pro Jahr</strong> (zur Kompensation der angepassten Infrastrukturkosten zzgl. Sicherheitsmarge) — entspricht rechnerisch ca. 200–400 real abrufenden Klienten in den 5 Bezirken; <strong>vor Freigabe gegen die echte Bestandszahl der Pflegegeld-/Sachleistungsklienten zu prüfen, bisher nicht validiert</strong><br>
+                    • Erlös aus Klientenextraktion: <strong>nicht quantifiziert — Datenbasis ausstehend.</strong> Dieser Betrag ist methodisch NICHT gleich 0 €, sondern unbekannt; er fließt unten in die 95.000 € „Erlös Basis-Pflegeleistungen" implizit bereits ein, deren Herleitung vor Freigabe durch eine reale Bottom-up-Auswertung der übernommenen Klienten (Bezirk für Bezirk) zu ersetzen ist — keine Euro-Schätzung ohne Bestandsdatenprüfung.
                 </div>
                 
                 <table class="modern-table" style="font-size: 0.85rem; margin-top: 5px;">
                     <thead>
                         <tr>
-                            <th style="width: 28%;">Kalkulationsposten</th>
-                            <th style="width: 24%;">Szenario A:<br>Basismodell KDO</th>
-                            <th style="width: 24%;">Szenario B:<br>Stufenaufstieg (+3,5%)</th>
-                            <th style="width: 24%;">Szenario C:<br>Tarifsteigerung (+5,0%)</th>
+                            <th style="width: 22%;">Kalkulationsposten</th>
+                            <th style="width: 19.5%;">Szenario A:<br>Basismodell KDO</th>
+                            <th style="width: 19.5%;">Szenario B:<br>Stufenaufstieg (+3,5%)</th>
+                            <th style="width: 19.5%;">Szenario C:<br>Tarifsteigerung (+5,0%)</th>
+                            <th style="width: 19.5%;">Szenario D:<br>Worst-Case (−15% Abruf)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -950,9 +952,11 @@
                             <td>135.000 €</td>
                             <td>139.725 €</td>
                             <td>141.750 €</td>
+                            <td>135.000 €</td>
                         </tr>
                         <tr>
                             <td><strong>Sachkosten / Infrastruktur</strong></td>
+                            <td>15.000 €</td>
                             <td>15.000 €</td>
                             <td>15.000 €</td>
                             <td>15.000 €</td>
@@ -962,30 +966,35 @@
                             <td>150.000 €</td>
                             <td>154.725 €</td>
                             <td>156.750 €</td>
+                            <td>150.000 €</td>
                         </tr>
                         <tr>
                             <td><strong>Erlös Basis-Pflegeleistungen</strong></td>
-                            <td>95.000 €</td>
+                            <td>95.000 € (nicht validiert, s.o.)</td>
                             <td>95.000 € (statisch)</td>
                             <td>99.750 € (+5,0% ref.)</td>
+                            <td>95.000 €</td>
                         </tr>
                         <tr>
-                            <td><strong>Erlös Beratung (§ 37.3)</strong></td>
-                            <td>55.020 €</td>
-                            <td>55.020 € (statisch)</td>
-                            <td>55.020 € (keine Dynamik)</td>
+                            <td><strong>Erlös Beratung (§ 37.3, 75 €)</strong></td>
+                            <td>60.000 € (800 Einsätze)</td>
+                            <td>60.000 € (statisch)</td>
+                            <td>60.000 € (keine Dynamik)</td>
+                            <td>51.000 € (680 Einsätze)</td>
                         </tr>
                         <tr style="background-color: #e2e8f0; font-weight: 600;">
                             <td>Gesamterlöse (Ist)</td>
-                            <td>150.020 €</td>
-                            <td>150.020 €</td>
-                            <td>154.770 €</td>
+                            <td>155.000 €</td>
+                            <td>155.000 €</td>
+                            <td>159.750 €</td>
+                            <td>146.000 €</td>
                         </tr>
                         <tr style="font-weight: 700;">
                             <td>Wirtschaftliches Ergebnis</td>
-                            <td style="color: #0f766e; background-color: #ccfbf1;">+ 20 €</td>
-                            <td style="color: #b91c1c; background-color: #fee2e2;">- 4.705 €</td>
-                            <td style="color: #b91c1c; background-color: #fee2e2;">- 1.980 €</td>
+                            <td style="color: #0f766e; background-color: #ccfbf1;">+ 5.000 €</td>
+                            <td style="color: #0f766e; background-color: #ccfbf1;">+ 275 €</td>
+                            <td style="color: #0f766e; background-color: #ccfbf1;">+ 3.000 €</td>
+                            <td style="color: #b91c1c; background-color: #fee2e2;">- 4.000 €</td>
                         </tr>
                     </tbody>
                 </table>
@@ -995,13 +1004,16 @@
                 <div class="card" style="border-left-color: #3b82f6; background: #eff6ff; padding: 15px; margin-bottom: 0;">
                     <strong style="color: #1d4ed8; font-size: 0.95rem;">Gemeinnützige Marge & Risikobewertung:</strong>
                     <p style="font-size: 0.9rem; color: #334155; margin-top: 5px;">
-                        Szenario A realisiert eine präzise Punktlandung (+20 €) im Sinne des Non-Profit-Status basierend auf 15.000 € Infrastrukturkosten und dem optimierten Beratungssatz von 70,00 €. Durch den höheren Einzelerlös sinkt die absolute Fallzahlbarriere im Basismodell drastisch. Dennoch schlagen KDO-Dynamiken ungepuffert durch, da die Beratungssätze politisch/vertraglich statisch fixiert bleiben: Reine Stufenaufstiege (Szenario B) führen in die Unterdeckung. Tarifsteigerungen (Szenario C) werden im Pflegesegment refinanziert, erzeugen im Beratungsbereich jedoch ein Defizit von 1.980 €, das durch moderate Fallzahlanpassungen auszugleichen ist.
+                        Szenario A erreicht mit einer Sicherheitsmarge von + 5.000 € (≈ 3,3 % der Gesamtkosten) einen branchenüblichen Mindestpuffer für gemeinnützige SGB-XI-Kalkulationen dieser Größenordnung (§ 55 AO erlaubt angemessene Rücklagenbildung) — basierend auf 15.000 € Infrastrukturkosten und dem real verhandelten Hessen-Beratungssatz von 75,00 €. Die vorherige Planung mit 70,00 € lag unter dem tatsächlich verhandelten Satz und hat das Modell damit selbst ärmer gerechnet, als es nach aktueller Vertragslage ist. Dennoch bleibt das Modell gegenüber KDO-Dynamiken empfindlich: Szenario B (Stufenaufstieg) landet bei nur + 275 € — praktisch ohne Puffer. Szenario D zeigt, dass bereits eine realistische Schwankung der Beratungs-Abrufquote (− 15 %) das gesamte Modell trotz Satzkorrektur um 4.000 € ins Minus kippt.
                     </p>
                     <p style="font-size: 0.9rem; color: #334155; margin-top: 8px; border-top: 1px dashed #bfdbfe; padding-top: 8px;">
-                        <strong>Erforderliche Fallzahlanpassung für Ziel-Ergebnis (+20 €):</strong><br>
-                        • <strong>Ausgangslage Basis (A):</strong> 786 Beratungen pro Jahr zur Sicherung des Gesamtbudgets.<br>
-                        • <strong>Szenario B (Stufenaufstieg):</strong> +68 Beratungen (Ergebnis-Ausgleich erfordert Anhebung auf gesamt 854 Einsätze/Jahr)<br>
-                        • <strong>Szenario C (Tarifsteigerung):</strong> +29 Beratungen (Ergebnis-Ausgleich erfordert Anhebung auf gesamt 815 Einsätze/Jahr)
+                        <strong>Erforderliche Fallzahlanpassung für Ziel-Ergebnis (+ 5.000 €):</strong><br>
+                        • <strong>Ausgangslage Basis (A):</strong> 800 Beratungen pro Jahr — entspricht rechnerisch ca. 200–400 real abrufenden Klienten in den 5 Bezirken (gesetzlich 2–4 Beratungen/Klient/Jahr, § 37 Abs. 3 SGB XI); <strong>ob diese Klientenzahl real existiert, ist vor Vorlage zwingend gegen die Bestandsdaten zu prüfen.</strong><br>
+                        • <strong>Szenario B (Stufenaufstieg):</strong> +63 Beratungen (Anhebung auf gesamt 863 Einsätze/Jahr)<br>
+                        • <strong>Szenario C (Tarifsteigerung):</strong> +27 Beratungen (Anhebung auf gesamt 827 Einsätze/Jahr)
+                    </p>
+                    <p style="font-size: 0.85rem; color: #1e3a5f; margin-top: 8px; border-top: 1px dashed #bfdbfe; padding-top: 8px; font-style: italic;">
+                        Hinweis: Die hier ausgewiesenen Euro-Beträge sind Rechenmodell-Ergebnisse auf Basis aktuell bester, aber nicht abschließend validierter Annahmen (vgl. Folie 8: fehlende valide Datenbasis für die Tourenanalyse). Sie sind als Orientierungsgröße für die Steuerungslogik zu verstehen, nicht als belastbare Punktprognose für die Budgetfreigabe — eine Rückkopplung mit realen Bestandsdaten vor Entscheidungsvorlage ist zwingend.
                     </p>
                 </div>
             </div>
